@@ -72,6 +72,7 @@ public class BookDetailsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
         TextView bookDetailsTextView = v.findViewById(R.id.bookDetailsTextView);
         bookDetailsTextView.setText(bookName);
+        bookDetailsTextView.setTextSize(40);
         return v;
     }
 
