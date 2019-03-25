@@ -9,14 +9,16 @@ import android.view.ViewParent;
 public class MainActivity extends AppCompatActivity {
 
     ViewPager viewPager;
-
+    //String[] bookList = getResources().getStringArray(R.array.books);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager viewPager = findViewById(R.id.viewPager);
-        viewPager
+        viewPager = findViewById(R.id.viewPager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
+
     }
 }

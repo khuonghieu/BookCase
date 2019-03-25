@@ -116,10 +116,12 @@ public class BookDetailsFragment extends Fragment {
     public void setBookName(String bookName){
         this.bookName = bookName;
     }
+
     //Get book name
     public String getBookName(){
         return this.bookName;
     }
+
     //Display book
     public void displayBook(String title){
         TextView bookDetailsTextView = getView().findViewById(R.id.bookDetailsTextView);
