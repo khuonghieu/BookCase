@@ -7,9 +7,8 @@
 
     <TextView
         android:id="@+id/bookDetailsTextView"
-        android:layout_width="230dp"
-        android:layout_height="341dp"
-        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="visible"
         tools:textSize="30sp" />
 </FrameLayout>

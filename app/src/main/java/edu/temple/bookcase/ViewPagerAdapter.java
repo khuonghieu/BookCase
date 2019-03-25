@@ -1,5 +1,6 @@
 package edu.temple.bookcase;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,17 +10,26 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    private Context context;
+    private String[] bookList;
+
+    public ViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
+        this.context = context;
     }
 
     @Override
     public Fragment getItem(int i) {
-        return new BookDetailsFragment();
+        bookList = context.getResources().getStringArray(R.array.books);
+        BookDetailsFragment bookDetailsFragment = new BookDetailsFragment();
+        bookDetailsFragment.setBookName(bookList[i]);
+        return bookDetailsFragment;
     }
 
     @Override
     public int getCount() {
-        return 0;
+
+        bookList = context.getResources().getStringArray(R.array.books);
+        return bookList.length;
     }
 }

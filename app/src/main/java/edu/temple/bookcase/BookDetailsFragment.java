@@ -21,7 +21,7 @@ import android.widget.TextView;
 public class BookDetailsFragment extends Fragment {
 
     //Name of book
-    private String bookName = "";
+    private String bookName;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,7 +69,10 @@ public class BookDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_book_details, container, false);
+        View v = inflater.inflate(R.layout.fragment_book_details, container, false);
+        TextView bookDetailsTextView = v.findViewById(R.id.bookDetailsTextView);
+        bookDetailsTextView.setText(bookName);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -79,22 +82,6 @@ public class BookDetailsFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -122,10 +109,5 @@ public class BookDetailsFragment extends Fragment {
         return this.bookName;
     }
 
-    //Display book
-    public void displayBook(String title){
-        TextView bookDetailsTextView = getView().findViewById(R.id.bookDetailsTextView);
-        bookDetailsTextView.setText(title);
-    }
 
 }
