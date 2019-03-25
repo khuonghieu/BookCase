@@ -20,15 +20,14 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (findViewById(R.id.bookListMainView) == null) {
+        if (findViewById(R.id.bookListMainView) == null || findViewById(R.id.bookDetailsMainView) == null) {
             isTwoPane = false;
         } else {
             isTwoPane = true;
         }
-
         if (!isTwoPane) {
             viewPager = findViewById(R.id.viewPager);
-            List<BookDetailsFragment> bookDetailsFragments = new ArrayList<>();
+            //List<BookDetailsFragment> bookDetailsFragments = new ArrayList<>();
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
             viewPager.setAdapter(viewPagerAdapter);
         } else {
