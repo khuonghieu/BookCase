@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">BookCase</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="books">
+        <item>Think Java</item>
+        <item>Think Python</item>
+        <item>Javascripts and Jquery</item>
+        <item>Computer Systems</item>
+        <item>Operating Systems</item>
+        <item>Ethical Hacking</item>
+        <item>Digital Forensics</item>
+        <item>Eloquent Javascripts</item>
+        <item>Clean code</item>
+    </string-array>
+</resources>
