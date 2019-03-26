@@ -12,7 +12,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
     private String[] bookList;
-
+    BookDetailsFragment bookDetailsFragment;
     public ViewPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
@@ -21,7 +21,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
         bookList = context.getResources().getStringArray(R.array.books);
-        BookDetailsFragment bookDetailsFragment = new BookDetailsFragment();
+        bookDetailsFragment = new BookDetailsFragment();
         bookDetailsFragment.setBookName(bookList[i]);
         return bookDetailsFragment;
     }

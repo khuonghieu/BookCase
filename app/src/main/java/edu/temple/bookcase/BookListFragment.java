@@ -52,7 +52,9 @@ public class BookListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String bookName = (String) parent.getItemAtPosition(position);
-                ((getBookName) context).bookSelected(bookName);
+                BookDetailsFragment newBookFragment = new BookDetailsFragment();
+                getFragmentManager().beginTransaction().replace(R.id.bookDetailsMainView, newBookFragment);
+                newBookFragment.setBookName(bookName);
             }
         });
 

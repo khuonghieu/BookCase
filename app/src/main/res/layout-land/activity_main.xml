@@ -8,26 +8,29 @@
     <fragment
         android:id="@+id/bookListMainView"
         android:name="edu.temple.bookcase.BookListFragment"
-        android:layout_width="212dp"
-        android:layout_height="396dp"
-        android:layout_marginStart="7dp"
+        android:layout_width="183dp"
+        android:layout_height="387dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.333" />
 
     <fragment
         android:id="@+id/bookDetailsMainView"
         android:name="edu.temple.bookcase.BookDetailsFragment"
-        android:layout_width="484dp"
-        android:layout_height="388dp"
+        android:layout_width="523dp"
+        android:layout_height="389dp"
         android:layout_marginStart="14dp"
         android:layout_marginTop="9dp"
         android:layout_marginEnd="14dp"
         android:layout_marginBottom="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/bookListMainView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 </android.support.constraint.ConstraintLayout>

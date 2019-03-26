@@ -9,40 +9,36 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BookListFragment.getBookName {
 
-    ViewPager viewPager;
     private boolean isTwoPane;
 
     BookListFragment bookListFragment;
     BookDetailsFragment bookDetailsFragment;
-
+    ViewPagerAdapter viewPagerAdapter;
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (findViewById(R.id.bookListMainView) == null || findViewById(R.id.bookDetailsMainView) == null) {
-            isTwoPane = false;
-        } else {
-            isTwoPane = true;
-        }
-        if (!isTwoPane) {
-            viewPager = findViewById(R.id.viewPager);
-            //List<BookDetailsFragment> bookDetailsFragments = new ArrayList<>();
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
-            viewPager.setAdapter(viewPagerAdapter);
-        } else {
+        isTwoPane = findViewById(R.id.bookListMainView) != null;
 
+
+        if (isTwoPane) {
             bookListFragment = new BookListFragment();
             bookDetailsFragment = new BookDetailsFragment();
 
             getSupportFragmentManager().beginTransaction().add(R.id.bookListMainView, bookListFragment).commit();
             getSupportFragmentManager().beginTransaction().add(R.id.bookDetailsMainView, bookDetailsFragment).commit();
 
+        } else {
+            viewPager = findViewById(R.id.viewPager);
+            viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
+            viewPager.setAdapter(viewPagerAdapter);
         }
     }
 
     @Override
     public void bookSelected(String bookName) {
-        bookDetailsFragment.setBookName(bookName);
+        viewPagerAdapter.bookDetailsFragment.setBookName(bookName);
     }
 }
