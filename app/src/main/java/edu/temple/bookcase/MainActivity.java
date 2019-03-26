@@ -12,9 +12,10 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     private boolean isTwoPane;
 
     BookListFragment bookListFragment;
-    BookDetailsFragment bookDetailsFragment;
+    BookDetailsFragmentLandscape bookDetailsFragmentLandscape;
     ViewPagerAdapter viewPagerAdapter;
     ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,10 +26,10 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         if (isTwoPane) {
             bookListFragment = new BookListFragment();
-            bookDetailsFragment = new BookDetailsFragment();
+            bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
 
             getSupportFragmentManager().beginTransaction().add(R.id.bookListMainView, bookListFragment).commit();
-            getSupportFragmentManager().beginTransaction().add(R.id.bookDetailsMainView, bookDetailsFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.bookDetailsMainView, bookDetailsFragmentLandscape).commit();
 
         } else {
             viewPager = findViewById(R.id.viewPager);
@@ -39,6 +40,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void bookSelected(String bookName) {
-        viewPagerAdapter.bookDetailsFragment.setBookName(bookName);
+        bookDetailsFragmentLandscape.displayBookName(bookName);
     }
 }

@@ -7,14 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.TextView;
 
-public class BookListFragment extends Fragment {
+public class BookDetailsFragmentLandscape extends Fragment {
 
-    Context context;
 
+    TextView bookDetailsFragmentLandscape;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -26,7 +24,7 @@ public class BookListFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public BookListFragment() {
+    public BookDetailsFragmentLandscape() {
         // Required empty public constructor
     }
 
@@ -42,44 +40,20 @@ public class BookListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v= inflater.inflate(R.layout.fragment_book_list, container, false);
-        ListView bookListView = v.findViewById(R.id.bookListMainView);
-
-        bookListView.setAdapter(new ArrayAdapter<>(context,android.R.layout.simple_list_item_1,
-                                    context.getResources().getStringArray(R.array.books)));
-
-        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String bookName = (String) parent.getItemAtPosition(position);
-                ((getBookName) getActivity()).bookSelected(bookName);
-            }
-        });
-
-
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fr   agment
+        View v = inflater.inflate(R.layout.fragment_book_details_fragment_landscape, container, false);
+        bookDetailsFragmentLandscape = v.findViewById(R.id.bookDetailsFragmentLandscape);
         return v;
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
-    public interface getBookName{
-        void bookSelected(String bookName);
+    public void displayBookName(String bookName) {
+        bookDetailsFragmentLandscape.setText(bookName);
+        bookDetailsFragmentLandscape.setTextSize(40);
     }
 }
