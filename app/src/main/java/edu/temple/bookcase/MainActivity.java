@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             bookListFragment = new BookListFragment();
             bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
 
-            getSupportFragmentManager().beginTransaction().add(R.id.bookListMainView, bookListFragment).commit();
-            getSupportFragmentManager().beginTransaction().add(R.id.bookDetailsMainView, bookDetailsFragmentLandscape).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.bookListMainView, bookListFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsMainView, bookDetailsFragmentLandscape).commit();
 
         } else {
             viewPager = findViewById(R.id.viewPager);
