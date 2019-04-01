@@ -43,16 +43,17 @@ public class BookListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v= inflater.inflate(R.layout.fragment_book_list, container, false);
-        ListView bookListView = v.findViewById(R.id.bookListMainView);
+        final ListView bookListView = v.findViewById(R.id.bookListMainView);
 
+        //TODO: create new adapter
         bookListView.setAdapter(new ArrayAdapter<>(context,android.R.layout.simple_list_item_1,
                                     context.getResources().getStringArray(R.array.books)));
 
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String bookName = (String) parent.getItemAtPosition(position);
-                ((getBookName) getActivity()).bookSelected(bookName);
+                Book book = (Book) parent.getItemAtPosition(position);
+                ((getBook) getActivity()).bookSelected(book);
             }
         });
 
@@ -79,7 +80,7 @@ public class BookListFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public interface getBookName{
-        void bookSelected(String bookName);
+    public interface getBook {
+        void bookSelected(Book book);
     }
 }
