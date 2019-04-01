@@ -7,13 +7,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 
 public class BookDetailsFragment extends Fragment {
 
     //Name of book
-    private String bookName;
+    private Book book;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,9 +47,16 @@ public class BookDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
-        TextView bookDetailsTextView = v.findViewById(R.id.bookDetailsTextView);
-        bookDetailsTextView.setText(bookName);
-        bookDetailsTextView.setTextSize(40);
+
+        TextView bookTitle = v.findViewById(R.id.bookTitle);
+        ImageView bookCover = v.findViewById(R.id.bookCover);
+        TextView bookAuthor = v.findViewById(R.id.bookAuthor);
+        TextView bookPublishDate = v.findViewById(R.id.bookPublishDate);
+        bookTitle.setText(book.getTitle());
+        Picasso.get().load(book.getCoverURL()).into(bookCover);
+        bookAuthor.setText(book.getAuthor());
+        bookPublishDate.setText(book.getPublished());
+
         return v;
     }
 
@@ -58,13 +68,13 @@ public class BookDetailsFragment extends Fragment {
 
 
     //Set book name
-    public void setBookName(String bookName){
-        this.bookName = bookName;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     //Get book name
-    public String getBookName(){
-        return this.bookName;
+    public Book getBook() {
+        return this.book;
     }
 
 
