@@ -21,7 +21,7 @@
         <ImageView
             android:id="@+id/bookCover"
             android:layout_width="match_parent"
-            android:layout_height="407dp"
+            android:layout_height="431dp"
             tools:src="@tools:sample/avatars" />
 
         <TextView
@@ -34,6 +34,7 @@
             android:id="@+id/bookPublishDate"
             android:layout_width="match_parent"
             android:layout_height="38dp"
-            android:text="TextView" />
+            android:text="TextView"
+            android:visibility="visible" />
     </LinearLayout>
 </FrameLayout>

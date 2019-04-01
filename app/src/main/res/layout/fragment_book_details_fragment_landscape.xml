@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/bookCoverLandscape"
             android:layout_width="match_parent"
-            android:layout_height="325dp"
+            android:layout_height="417dp"
             tools:src="@tools:sample/avatars[3]" />
 
         <TextView

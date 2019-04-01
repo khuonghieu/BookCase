@@ -1,5 +1,8 @@
 package edu.temple.bookcase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Book {
     private int id;
     private String title;
@@ -13,6 +16,11 @@ public class Book {
         this.author = author;
         this.published = published;
         this.coverURL = coverURL;
+    }
+
+    public Book(JSONObject jsonObject) throws JSONException {
+        this(jsonObject.getInt("book_id"), jsonObject.getString("title"), jsonObject.getString("author"),
+                jsonObject.getInt("published"), jsonObject.getString("cover_url"));
     }
 
     public int getId() {
