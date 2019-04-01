@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         if (isTwoPane) {
             bookListFragment = new BookListFragment();
+
             bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
 
             getSupportFragmentManager().beginTransaction().replace(R.id.bookListMainView, bookListFragment).commit();

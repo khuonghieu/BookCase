@@ -7,12 +7,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 public class BookDetailsFragmentLandscape extends Fragment {
 
 
-    TextView bookDetailsFragmentLandscape;
+    TextView bookTitleLandscape;
+    ImageView bookCoverLandscape;
+    TextView bookAuthorLandscape;
+    TextView bookPublishDateLandscape;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -42,7 +50,10 @@ public class BookDetailsFragmentLandscape extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fr   agment
         View v = inflater.inflate(R.layout.fragment_book_details_fragment_landscape, container, false);
-        bookDetailsFragmentLandscape = v.findViewById(R.id.bookDetailsFragmentLandscape);
+        bookTitleLandscape = v.findViewById(R.id.bookTitleLandscape);
+        bookCoverLandscape = v.findViewById(R.id.bookCoverLandscape);
+        bookAuthorLandscape = v.findViewById(R.id.bookAuthorLandscape);
+        bookPublishDateLandscape = v.findViewById(R.id.bookPublishDateLandscape);
         return v;
     }
 
@@ -52,8 +63,10 @@ public class BookDetailsFragmentLandscape extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void displayBookName(String bookName) {
-        bookDetailsFragmentLandscape.setText(bookName);
-        bookDetailsFragmentLandscape.setTextSize(40);
+    public void displayBookName(Book book) {
+        bookTitleLandscape.setText(book.getTitle());
+        Picasso.get().load(book.getCoverURL()).into(bookCoverLandscape);
+        bookAuthorLandscape.setText(book.getAuthor());
+        bookPublishDateLandscape.setText(book.getPublished());
     }
 }
