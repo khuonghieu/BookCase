@@ -12,14 +12,13 @@ import org.json.JSONObject;
 
 public class BookAdapter extends BaseAdapter {
 
-    private Context context;
-    private JSONArray jsonArray;
+    public Context context;
+    public JSONArray jsonArray;
 
     public BookAdapter(Context context, JSONArray jsonArray) {
         this.context = context;
         this.jsonArray = jsonArray;
     }
-
     public int getCount() {
         return jsonArray.length();
     }
@@ -49,5 +48,9 @@ public class BookAdapter extends BaseAdapter {
             e.printStackTrace();
         }
         return textView;
+    }
+
+    public void setJsonArray(JSONArray jsonArray) {
+        this.jsonArray = jsonArray;
     }
 }

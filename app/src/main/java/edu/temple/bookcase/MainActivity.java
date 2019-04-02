@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,14 +25,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     BookListFragment bookListFragment;
     BookDetailsFragmentLandscape bookDetailsFragmentLandscape;
-    ViewPagerAdapter viewPagerAdapter;
     ViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
 
     TextView searchBox;
     Button searchButton;
     TextView searchBoxLandscape;
     Button searchButtonLandscape;
-    String baseURL = "https://kamorris.com/lab/audlib/booksearch.php?search=";
     Book currentBook;
 
     @Override
@@ -40,8 +40,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        isTwoPane = findViewById(R.id.bookListMainView) != null;
-
+        isTwoPane = findViewById(R.id.bookListLandscape) != null;
 
         if (isTwoPane) {
             //Landscape mode
@@ -49,20 +48,20 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             searchButtonLandscape = findViewById(R.id.searchButtonLandscape);
             bookListFragment = new BookListFragment();
             bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
-            getSupportFragmentManager().beginTransaction().replace(R.id.bookListMainView, bookListFragment).commit();
-            getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsMainView, bookDetailsFragmentLandscape).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.bookListLandscape, bookListFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.bookDetailsLandscape, bookDetailsFragmentLandscape).commit();
             searchButtonLandscape.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String searchQueryLandscape = searchBoxLandscape.getText().toString();
+
                     Thread t2 = new Thread() {
                         @Override
                         public void run() {
 
-                            URL bookUrl;
 
                             try {
-                                bookUrl = new URL("https://kamorris.com/lab/audlib/booksearch.php?search=" + searchQueryLandscape);
+                                String searchQueryLandscape = searchBoxLandscape.getText().toString();
+                                URL bookUrl = new URL("https://kamorris.com/lab/audlib/booksearch.php?search=" + searchQueryLandscape);
 
                                 BufferedReader reader = new BufferedReader(
                                         new InputStreamReader(bookUrl.openStream()));
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                                     response = response + tmpResponse;
                                     tmpResponse = reader.readLine();
                                 }
-
+                                reader.close();
                                 JSONArray bookArray = new JSONArray(response);
                                 Message msg = Message.obtain();
                                 msg.obj = bookArray;
@@ -95,27 +94,27 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String searchQuery = searchBox.getText().toString();
+
                     Thread t = new Thread() {
                         @Override
                         public void run() {
-
-                            URL bookUrl;
-
                             try {
-                                bookUrl = new URL("https://kamorris.com/lab/audlib/booksearch.php?search=" + searchQuery);
-
+                                String searchQuery = searchBox.getText().toString();
+                                URL bookUrl = new URL("https://kamorris.com/lab/audlib/booksearch.php?search=" + searchQuery);
+                                Log.d("URL", bookUrl.toString());
                                 BufferedReader reader = new BufferedReader(
                                         new InputStreamReader(bookUrl.openStream()));
 
-                                String response = "", tmpResponse;
+                                String tmpResponse;
+                                StringBuilder responseBuilder = new StringBuilder();
 
                                 tmpResponse = reader.readLine();
                                 while (tmpResponse != null) {
-                                    response = response + tmpResponse;
+                                    responseBuilder.append(tmpResponse);
                                     tmpResponse = reader.readLine();
                                 }
-
+                                reader.close();
+                                String response = responseBuilder.toString();
                                 JSONArray bookArray = new JSONArray(response);
                                 Message msg = Message.obtain();
                                 msg.obj = bookArray;
@@ -141,8 +140,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
             try {
                 for (int i = 0; i < responseArray.length(); i++) {
-                    currentBook = new Book((JSONObject) responseArray.get(i));
-                    bookArrayList.add(currentBook);
+                    JSONObject jsonObject = responseArray.getJSONObject(i);
+                    bookArrayList.add(new Book(jsonObject));
+                    Log.d("check", jsonObject.getString("title"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -152,15 +152,26 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             return false;
         }
     });
+
     Handler bookResponseHandlerLandscape = new Handler(new Handler.Callback() {
 
         @Override
         public boolean handleMessage(Message msg) {
+            ArrayList<Book> bookArrayList = new ArrayList<>();
             JSONArray responseArray = (JSONArray) msg.obj;
+            try {
+                for (int i = 0; i < responseArray.length(); i++) {
+                    currentBook = new Book((JSONObject) responseArray.get(i));
+                    bookArrayList.add(currentBook);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             updateViews(responseArray);
             return false;
         }
     });
+
     @Override
     public void bookSelected(Book book) {
         bookDetailsFragmentLandscape.displayBookName(book);
@@ -173,11 +184,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     public void updateViews(JSONArray jsonArray) {
-        bookListFragment = new BookListFragment(jsonArray, new BookAdapter(this, jsonArray));
+        bookListFragment = new BookListFragment();
         bookListFragment.setJsonArray(jsonArray);
         bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
-        getSupportFragmentManager().beginTransaction().replace(R.id.bookListMainView, bookListFragment).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsMainView, bookDetailsFragmentLandscape).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.bookListLandscape, bookListFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsLandscape, bookDetailsFragmentLandscape).commit();
     }
 
 

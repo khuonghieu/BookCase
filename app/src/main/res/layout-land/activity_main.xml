@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/bookListMainView"
+        android:id="@+id/bookListLandscape"
         android:name="edu.temple.bookcase.BookListFragment"
         android:layout_width="183dp"
         android:layout_height="335dp"
@@ -19,7 +19,7 @@
         app:layout_constraintVertical_bias="0.917" />
 
     <fragment
-        android:id="@+id/bookDetailsMainView"
+        android:id="@+id/bookDetailsLandscape"
         android:name="edu.temple.bookcase.BookDetailsFragment"
         android:layout_width="523dp"
         android:layout_height="335dp"
@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/bookListMainView"
+        app:layout_constraintStart_toEndOf="@+id/bookListLandscape"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.928" />
 

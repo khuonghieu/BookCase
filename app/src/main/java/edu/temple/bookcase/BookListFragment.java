@@ -1,6 +1,5 @@
 package edu.temple.bookcase;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,26 +14,22 @@ import org.json.JSONObject;
 
 public class BookListFragment extends Fragment {
 
-    Context context;
-    private JSONArray jsonArray;
+    JSONArray jsonArray;
     BookAdapter bookAdapter;
+    ListView bookListView;
 
     public BookListFragment() {
-        // Required empty public constructor
-    }
 
-    public BookListFragment(JSONArray jsonArray, BookAdapter bookAdapter) {
-        super();
-        this.jsonArray = jsonArray;
-        this.bookAdapter = bookAdapter;
+        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v= inflater.inflate(R.layout.fragment_book_list, container, false);
-
-        ListView bookListView = v.findViewById(R.id.bookListMainView);
+        View v = inflater.inflate(R.layout.fragment_book_list, container, false);
+        bookListView = v.findViewById(R.id.bookListView);
+        bookAdapter = new BookAdapter(getContext(), jsonArray);
+        bookAdapter.setJsonArray(jsonArray);
         bookListView.setAdapter(bookAdapter);
 
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,6 +53,7 @@ public class BookListFragment extends Fragment {
     public void setJsonArray(JSONArray jsonArray) {
         this.jsonArray = jsonArray;
     }
+
     public interface getBook {
         void bookSelected(Book book);
     }
