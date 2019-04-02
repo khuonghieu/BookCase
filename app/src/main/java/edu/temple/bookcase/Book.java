@@ -93,11 +93,11 @@ public class Book implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(author);
-        dest.writeString(coverURL);
-        dest.writeInt(id);
         dest.writeInt(published);
+        dest.writeString(coverURL);
 
     }
 }

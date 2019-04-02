@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             //Portrait mode
             viewPager = findViewById(R.id.viewPager);
 
-            viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), this, new ArrayList<Book>()));
+            viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<Book>()));
             searchBox = findViewById(R.id.searchBox);
             searchButton = findViewById(R.id.searchButton);
             searchButton.setOnClickListener(new View.OnClickListener() {

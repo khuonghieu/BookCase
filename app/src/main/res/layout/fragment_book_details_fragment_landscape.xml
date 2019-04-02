@@ -14,25 +14,22 @@
         <TextView
             android:id="@+id/bookTitleLandscape"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="TextView" />
+            android:layout_height="30dp" />
 
         <ImageView
             android:id="@+id/bookCoverLandscape"
             android:layout_width="match_parent"
-            android:layout_height="380dp"
+            android:layout_height="200dp"
             tools:src="@tools:sample/avatars[3]" />
 
         <TextView
             android:id="@+id/bookAuthorLandscape"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="TextView" />
+            android:layout_height="30dp" />
 
         <TextView
             android:id="@+id/bookPublishDateLandscape"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="TextView" />
+            android:layout_height="30dp" />
     </LinearLayout>
 </FrameLayout>
