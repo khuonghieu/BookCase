@@ -66,16 +66,21 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                                 BufferedReader reader = new BufferedReader(
                                         new InputStreamReader(bookUrl.openStream()));
 
-                                String response = "", tmpResponse;
+                                String tmpResponse;
+                                StringBuilder responseBuilder = new StringBuilder();
 
                                 tmpResponse = reader.readLine();
                                 while (tmpResponse != null) {
-                                    response = response + tmpResponse;
+                                    responseBuilder.append(tmpResponse);
                                     tmpResponse = reader.readLine();
                                 }
                                 reader.close();
+
+                                String response = responseBuilder.toString();
                                 JSONArray bookArray = new JSONArray(response);
+
                                 Message msg = Message.obtain();
+
                                 msg.obj = bookArray;
                                 bookResponseHandlerLandscape.sendMessage(msg);
                             } catch (Exception e) {
@@ -101,7 +106,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                             try {
                                 String searchQuery = searchBox.getText().toString();
                                 URL bookUrl = new URL("https://kamorris.com/lab/audlib/booksearch.php?search=" + searchQuery);
-                                Log.d("URL", bookUrl.toString());
+
+                                Log.d("URL check", bookUrl.toString());
+
                                 BufferedReader reader = new BufferedReader(
                                         new InputStreamReader(bookUrl.openStream()));
 
@@ -114,10 +121,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                                     tmpResponse = reader.readLine();
                                 }
                                 reader.close();
+
                                 String response = responseBuilder.toString();
                                 JSONArray bookArray = new JSONArray(response);
+
                                 Message msg = Message.obtain();
                                 msg.obj = bookArray;
+
                                 bookResponseHandler.sendMessage(msg);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -135,7 +145,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         @Override
         public boolean handleMessage(Message msg) {
+
             ArrayList<Book> bookArrayList = new ArrayList<>();
+
             JSONArray responseArray = (JSONArray) msg.obj;
 
             try {
@@ -147,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             setViewPagerAdapter(bookArrayList);
 
             return false;
@@ -158,7 +171,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         @Override
         public boolean handleMessage(Message msg) {
             ArrayList<Book> bookArrayList = new ArrayList<>();
+
             JSONArray responseArray = (JSONArray) msg.obj;
+
             try {
                 for (int i = 0; i < responseArray.length(); i++) {
                     currentBook = new Book((JSONObject) responseArray.get(i));
@@ -167,7 +182,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             updateViews(responseArray);
+
             return false;
         }
     });
@@ -179,16 +196,17 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     public void setViewPagerAdapter(ArrayList<Book> bookList) {
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this, bookList);
-        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), this, bookList));
     }
 
     public void updateViews(JSONArray jsonArray) {
-        bookListFragment = new BookListFragment();
+        //bookListFragment = new BookListFragment();
         bookListFragment.setJsonArray(jsonArray);
-        bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
-        getSupportFragmentManager().beginTransaction().replace(R.id.bookListLandscape, bookListFragment).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsLandscape, bookDetailsFragmentLandscape).commit();
+
+        //bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
+
+        //getSupportFragmentManager().beginTransaction().replace(R.id.bookListLandscape, bookListFragment).commit();
+        //getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsLandscape, bookDetailsFragmentLandscape).commit();
     }
 
 

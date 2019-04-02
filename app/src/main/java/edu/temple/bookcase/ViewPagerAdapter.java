@@ -28,7 +28,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        bookDetailsFragment = new BookDetailsFragment();
+        BookDetailsFragment bookDetailsFragment = new BookDetailsFragment();
         bookDetailsFragment.setBook(bookList.get(i));
         return bookDetailsFragment;
     }
@@ -37,7 +37,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return bookList.size();
     }
-
     @Override
     public int getItemPosition(@NonNull Object object) {
         return PagerAdapter.POSITION_NONE;
