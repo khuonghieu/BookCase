@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     TextView searchBox;
     Button searchButton;
+    TextView searchBoxLandscape;
+    Button searchButtonLandscape;
     String baseURL = "https://kamorris.com/lab/audlib/booksearch.php?search=";
     Book currentBook;
 
@@ -42,14 +44,51 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
 
         if (isTwoPane) {
+            //Landscape mode
+            searchBoxLandscape = findViewById(R.id.searchBoxLandscape);
+            searchButtonLandscape = findViewById(R.id.searchButtonLandscape);
             bookListFragment = new BookListFragment();
-
             bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
-
             getSupportFragmentManager().beginTransaction().replace(R.id.bookListMainView, bookListFragment).commit();
             getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsMainView, bookDetailsFragmentLandscape).commit();
+            searchButtonLandscape.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String searchQueryLandscape = searchBoxLandscape.getText().toString();
+                    Thread t2 = new Thread() {
+                        @Override
+                        public void run() {
 
+                            URL bookUrl;
+
+                            try {
+                                bookUrl = new URL("https://kamorris.com/lab/audlib/booksearch.php?search=" + searchQueryLandscape);
+
+                                BufferedReader reader = new BufferedReader(
+                                        new InputStreamReader(bookUrl.openStream()));
+
+                                String response = "", tmpResponse;
+
+                                tmpResponse = reader.readLine();
+                                while (tmpResponse != null) {
+                                    response = response + tmpResponse;
+                                    tmpResponse = reader.readLine();
+                                }
+
+                                JSONArray bookArray = new JSONArray(response);
+                                Message msg = Message.obtain();
+                                msg.obj = bookArray;
+                                bookResponseHandlerLandscape.sendMessage(msg);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    t2.start();
+                }
+            });
         } else {
+            //Portrait mode
             viewPager = findViewById(R.id.viewPager);
             searchBox = findViewById(R.id.searchBox);
             searchButton = findViewById(R.id.searchButton);
@@ -113,7 +152,15 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             return false;
         }
     });
+    Handler bookResponseHandlerLandscape = new Handler(new Handler.Callback() {
 
+        @Override
+        public boolean handleMessage(Message msg) {
+            JSONArray responseArray = (JSONArray) msg.obj;
+            updateViews(responseArray);
+            return false;
+        }
+    });
     @Override
     public void bookSelected(Book book) {
         bookDetailsFragmentLandscape.displayBookName(book);
@@ -123,6 +170,14 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     public void setViewPagerAdapter(ArrayList<Book> bookList) {
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this, bookList);
         viewPager.setAdapter(viewPagerAdapter);
+    }
+
+    public void updateViews(JSONArray jsonArray) {
+        bookListFragment = new BookListFragment(jsonArray, new BookAdapter(this, jsonArray));
+        bookListFragment.setJsonArray(jsonArray);
+        bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
+        getSupportFragmentManager().beginTransaction().replace(R.id.bookListMainView, bookListFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsMainView, bookDetailsFragmentLandscape).commit();
     }
 
 
