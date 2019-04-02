@@ -11,14 +11,13 @@ import java.util.ArrayList;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private Context context;
+
     private ArrayList<Book> bookList;
 
     BookDetailsFragment bookDetailsFragment;
 
-    public ViewPagerAdapter(FragmentManager fm, Context context, ArrayList<Book> bookList) {
+    public ViewPagerAdapter(FragmentManager fm, ArrayList<Book> bookList) {
         super(fm);
-        this.context = context;
         this.bookList = bookList;
     }
 
@@ -28,9 +27,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        BookDetailsFragment bookDetailsFragment = new BookDetailsFragment();
-        bookDetailsFragment.setBook(bookList.get(i));
-        return bookDetailsFragment;
+        return BookDetailsFragment.newInstance(bookList.get(i));
     }
 
     @Override
