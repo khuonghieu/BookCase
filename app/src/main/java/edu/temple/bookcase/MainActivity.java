@@ -203,13 +203,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     public void updateViews(JSONArray jsonArray) {
-        //bookListFragment = new BookListFragment();
         bookListFragment.setJsonArray(jsonArray);
-
-        //bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
-
-        //getSupportFragmentManager().beginTransaction().replace(R.id.bookListLandscape, bookListFragment).commit();
-        //getSupportFragmentManager().beginTransaction().replace(R.id.bookDetailsLandscape, bookDetailsFragmentLandscape).commit();
     }
 
 

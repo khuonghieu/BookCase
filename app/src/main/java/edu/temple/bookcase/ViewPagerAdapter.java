@@ -14,7 +14,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private ArrayList<Book> bookList;
 
-    BookDetailsFragment bookDetailsFragment;
+    //BookDetailsFragment bookDetailsFragment;
 
     public ViewPagerAdapter(FragmentManager fm, ArrayList<Book> bookList) {
         super(fm);
@@ -28,6 +28,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
         return BookDetailsFragment.newInstance(bookList.get(i));
+
     }
 
     @Override

@@ -28,7 +28,6 @@ public class BookDetailsFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putParcelable("book", book);
         bdf.setArguments(bundle);
-
         return bdf;
 
     }

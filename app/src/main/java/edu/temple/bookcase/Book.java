@@ -22,16 +22,19 @@ public class Book implements Parcelable {
     }
 
     public Book(JSONObject jsonObject) throws JSONException {
-        this(jsonObject.getInt("book_id"), jsonObject.getString("title"), jsonObject.getString("author"),
-                jsonObject.getInt("published"), jsonObject.getString("cover_url"));
+        this(jsonObject.getInt("book_id"),
+                jsonObject.getString("title"),
+                jsonObject.getString("author"),
+                jsonObject.getInt("published"),
+                jsonObject.getString("cover_url"));
     }
 
-    protected Book(Parcel in) {
-        id = in.readInt();
-        title = in.readString();
-        author = in.readString();
-        published = in.readInt();
-        coverURL = in.readString();
+    private Book(Parcel in) {
+        this.id = in.readInt();
+        this.title = in.readString();
+        this.author = in.readString();
+        this.published = in.readInt();
+        this.coverURL = in.readString();
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
