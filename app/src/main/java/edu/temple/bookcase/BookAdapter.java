@@ -44,6 +44,7 @@ public class BookAdapter extends BaseAdapter {
         TextView textView = new TextView(context);
         try {
             textView.setText(jsonArray.getJSONObject(position).getString("title"));
+            textView.setTextSize(20);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -95,7 +95,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             //Portrait mode
             viewPager = findViewById(R.id.viewPager);
 
-            viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<Book>()));
+            viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<Book>(),
+                    new ArrayList<BookDetailsFragment>()));
+
             searchBox = findViewById(R.id.searchBox);
             searchButton = findViewById(R.id.searchButton);
             searchButton.setOnClickListener(new View.OnClickListener() {
@@ -198,8 +200,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     public void setViewPagerAdapter(ArrayList<Book> bookList) {
-        ((ViewPagerAdapter) viewPager.getAdapter()).setBookList(bookList);
-        viewPager.getAdapter().notifyDataSetChanged();
+        //((ViewPagerAdapter) viewPager.getAdapter()).setBookList(bookList);
+        ((ViewPagerAdapter) viewPager.getAdapter()).addBooks(bookList);
+        //viewPager.getAdapter().notifyDataSetChanged();
     }
 
     public void updateViews(JSONArray jsonArray) {

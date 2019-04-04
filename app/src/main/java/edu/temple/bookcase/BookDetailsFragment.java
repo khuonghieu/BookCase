@@ -55,6 +55,7 @@ public class BookDetailsFragment extends Fragment {
         if (book != null) {
 
             bookTitle.setText(book.getTitle());
+            bookTitle.setTextSize(20);
             Picasso.get().load(book.getCoverURL()).into(bookCover);
             bookAuthor.setText(book.getAuthor());
             bookPublishDate.setText(String.valueOf(book.getPublished()));
