@@ -29,7 +29,7 @@ public class BookDetailsFragmentLandscape extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fr   agment
+        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details_fragment_landscape, container, false);
         bookTitleLandscape = v.findViewById(R.id.bookTitleLandscape);
         bookCoverLandscape = v.findViewById(R.id.bookCoverLandscape);

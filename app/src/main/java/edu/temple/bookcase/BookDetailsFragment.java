@@ -62,16 +62,4 @@ public class BookDetailsFragment extends Fragment {
         }
         return v;
     }
-
-    //Set book name
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    //Get book name
-    public Book getBook() {
-        return this.book;
-    }
-
-
 }

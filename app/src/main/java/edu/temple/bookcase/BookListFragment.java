@@ -28,9 +28,6 @@ public class BookListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_book_list, container, false);
         bookListView = v.findViewById(R.id.bookListView);
-        //bookAdapter = new BookAdapter(getContext(), jsonArray);
-        //bookAdapter.setJsonArray(jsonArray);
-        //bookListView.setAdapter(bookAdapter);
 
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

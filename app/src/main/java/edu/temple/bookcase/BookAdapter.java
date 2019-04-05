@@ -50,8 +50,4 @@ public class BookAdapter extends BaseAdapter {
         }
         return textView;
     }
-
-    public void setJsonArray(JSONArray jsonArray) {
-        this.jsonArray = jsonArray;
-    }
 }
