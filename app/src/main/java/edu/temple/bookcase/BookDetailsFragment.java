@@ -97,9 +97,9 @@ public class BookDetailsFragment extends Fragment {
         progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                //((audioControl) getActivity()).seekToAudio(progress*10);
-                //Log.d("progress",Integer.toString(progress));
-                ((audioControl) getActivity()).playAudio(book.getId(), progress);
+                ((audioControl) getActivity()).seekToAudio(progress);
+                Log.d("progress", Integer.toString(progress));
+                //((audioControl) getActivity()).playAudio(book.getId(), progress);
             }
 
             @Override
@@ -117,8 +117,6 @@ public class BookDetailsFragment extends Fragment {
         void pauseAudio();
 
         void playAudio(int bookId);
-
-        void playAudio(int bookId, int position);
 
         void stopAudio();
 

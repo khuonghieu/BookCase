@@ -240,11 +240,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     @Override
-    public void playAudio(int bookId, int position) {
-        mediaControlBinder.play(bookId, position);
-    }
-
-    @Override
     public void stopAudio() {
         mediaControlBinder.stop();
     }
@@ -266,6 +261,5 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             audioBound = false;
         }
     };
-
 
 }
