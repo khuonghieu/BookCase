@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 import edu.temple.audiobookplayer.AudiobookService;
 
-public class MainActivity extends AppCompatActivity implements BookListFragment.getBook, BookDetailsFragment.audioControl {
+public class MainActivity extends AppCompatActivity implements BookListFragment.getBook, BookDetailsFragment.audioControl, BookDetailsFragmentLandscape.audioControlLandscape {
 
     private boolean isTwoPane;
 
@@ -108,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
                 }
             });
+            playIntent = new Intent(this, AudiobookService.class);
+            bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
 
 
         } else {
@@ -214,8 +217,22 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         }
     });
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            audioBound = true;
+            mediaControlBinder = (AudiobookService.MediaControlBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            audioBound = false;
+        }
+    };
+
     @Override
     public void bookSelected(Book book) {
+        bookDetailsFragmentLandscape.setBook(book);
         bookDetailsFragmentLandscape.displayBookName(book);
 
     }
@@ -249,17 +266,24 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         mediaControlBinder.seekTo(position);
     }
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            audioBound = true;
-            mediaControlBinder = (AudiobookService.MediaControlBinder) service;
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            audioBound = false;
-        }
-    };
+    @Override
+    public void pauseAudioLandscape() {
+        mediaControlBinder.pause();
+    }
 
+    @Override
+    public void playAudioLandscape(int bookId) {
+        mediaControlBinder.play(bookId);
+    }
+
+    @Override
+    public void stopAudioLandscape() {
+        mediaControlBinder.stop();
+    }
+
+    @Override
+    public void seekToAudioLandscape(int position) {
+        mediaControlBinder.seekTo(position);
+    }
 }

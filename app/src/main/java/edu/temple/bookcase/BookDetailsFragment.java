@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -64,10 +66,11 @@ public class BookDetailsFragment extends Fragment {
         Button pauseButton = v.findViewById(R.id.pauseButton);
         final Button playButton = v.findViewById(R.id.playButton);
         Button stopButton = v.findViewById(R.id.stopButton);
+
         progressBar.setMax(book.getDuration());
+        //((audioControl)getActivity()).setProgress();
 
         if (book != null) {
-
             bookTitle.setText(book.getTitle());
             bookTitle.setTextSize(20);
             Picasso.get().load(book.getCoverURL()).into(bookCover);
@@ -97,9 +100,10 @@ public class BookDetailsFragment extends Fragment {
         progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ((audioControl) getActivity()).seekToAudio(progress);
-                Log.d("progress", Integer.toString(progress));
-                //((audioControl) getActivity()).playAudio(book.getId(), progress);
+                if (fromUser) {
+                    ((audioControl) getActivity()).seekToAudio(progress);
+                    Log.d("progress", Integer.toString(progress));
+                }
             }
 
             @Override
@@ -121,5 +125,7 @@ public class BookDetailsFragment extends Fragment {
         void stopAudio();
 
         void seekToAudio(int position);
+
+        //void setProgress();
     }
 }
