@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -51,7 +53,10 @@ public class BookDetailsFragment extends Fragment {
         ImageView bookCover = v.findViewById(R.id.bookCover);
         TextView bookAuthor = v.findViewById(R.id.bookAuthor);
         TextView bookPublishDate = v.findViewById(R.id.bookPublishDate);
-
+        SeekBar progressBar = v.findViewById(R.id.progressBar);
+        Button pauseButton = v.findViewById(R.id.pauseButton);
+        Button playButton = v.findViewById(R.id.playButton);
+        Button stopButton = v.findViewById(R.id.stopButton);
         if (book != null) {
 
             bookTitle.setText(book.getTitle());
@@ -60,6 +65,12 @@ public class BookDetailsFragment extends Fragment {
             bookAuthor.setText(book.getAuthor());
             bookPublishDate.setText(String.valueOf(book.getPublished()));
         }
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
         return v;
     }
 }
