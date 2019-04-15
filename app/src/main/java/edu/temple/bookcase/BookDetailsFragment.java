@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class BookDetailsFragment extends Fragment {
         final Button playButton = v.findViewById(R.id.playButton);
         Button stopButton = v.findViewById(R.id.stopButton);
         progressBar.setMax(book.getDuration());
+
         if (book != null) {
 
             bookTitle.setText(book.getTitle());
@@ -95,7 +97,9 @@ public class BookDetailsFragment extends Fragment {
         progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                ((audioControl) getActivity()).seekToAudio(progress);
+                //((audioControl) getActivity()).seekToAudio(progress*10);
+                //Log.d("progress",Integer.toString(progress));
+                ((audioControl) getActivity()).playAudio(book.getId(), progress);
             }
 
             @Override
@@ -109,11 +113,12 @@ public class BookDetailsFragment extends Fragment {
 
         return v;
     }
-
     public interface audioControl {
         void pauseAudio();
 
         void playAudio(int bookId);
+
+        void playAudio(int bookId, int position);
 
         void stopAudio();
 

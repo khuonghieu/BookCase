@@ -1,7 +1,12 @@
 package edu.temple.bookcase;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,14 +23,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-import android.os.IBinder;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.view.MenuItem;
-import android.view.View;
-
 import edu.temple.audiobookplayer.AudiobookService;
 
 public class MainActivity extends AppCompatActivity implements BookListFragment.getBook, BookDetailsFragment.audioControl {
@@ -41,10 +38,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     TextView searchBoxLandscape;
     Button searchButtonLandscape;
     Book currentBook;
+
     private AudiobookService audiobookService;
     private Intent playIntent;
     private boolean audioBound = false;
-
+    private AudiobookService.MediaControlBinder mediaControlBinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,9 +160,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 }
             });
             playIntent = new Intent(this, AudiobookService.class);
-            startService(playIntent);
-
-
+            bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         }
 
 
@@ -235,21 +231,41 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
     @Override
     public void pauseAudio() {
-
+        mediaControlBinder.pause();
     }
 
     @Override
     public void playAudio(int bookId) {
+        mediaControlBinder.play(bookId);
+    }
 
+    @Override
+    public void playAudio(int bookId, int position) {
+        mediaControlBinder.play(bookId, position);
     }
 
     @Override
     public void stopAudio() {
-
+        mediaControlBinder.stop();
     }
 
     @Override
     public void seekToAudio(int position) {
-
+        mediaControlBinder.seekTo(position);
     }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            audioBound = true;
+            mediaControlBinder = (AudiobookService.MediaControlBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            audioBound = false;
+        }
+    };
+
+
 }
