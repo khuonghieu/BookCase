@@ -53,6 +53,14 @@ public class Book implements Parcelable {
         }
     };
 
+    public int getId() {
+        return id;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
     public String getTitle() {
         return title;
     }

@@ -18,8 +18,17 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+import android.os.IBinder;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.view.MenuItem;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity implements BookListFragment.getBook {
+import edu.temple.audiobookplayer.AudiobookService;
+
+public class MainActivity extends AppCompatActivity implements BookListFragment.getBook, BookDetailsFragment.audioControl {
 
     private boolean isTwoPane;
 
@@ -32,6 +41,10 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     TextView searchBoxLandscape;
     Button searchButtonLandscape;
     Book currentBook;
+    private AudiobookService audiobookService;
+    private Intent playIntent;
+    private boolean audioBound = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +63,14 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
             getSupportFragmentManager().beginTransaction().add(R.id.bookListLandscape, bookListFragment).commit();
             getSupportFragmentManager().beginTransaction().add(R.id.bookDetailsLandscape, bookDetailsFragmentLandscape).commit();
+
+            playIntent = new Intent(this, AudiobookService.class);
+            startService(playIntent);
+
             searchButtonLandscape.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
 
                     Thread t2 = new Thread() {
                         @Override
@@ -89,8 +107,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                         }
                     };
                     t2.start();
+
                 }
             });
+
+
         } else {
             //Portrait mode
             viewPager = findViewById(R.id.viewPager);
@@ -140,7 +161,12 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     t.start();
                 }
             });
+            playIntent = new Intent(this, AudiobookService.class);
+            startService(playIntent);
+
+
         }
+
 
     }
 
@@ -207,4 +233,23 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
 
+    @Override
+    public void pauseAudio() {
+
+    }
+
+    @Override
+    public void playAudio(int bookId) {
+
+    }
+
+    @Override
+    public void stopAudio() {
+
+    }
+
+    @Override
+    public void seekToAudio(int position) {
+
+    }
 }

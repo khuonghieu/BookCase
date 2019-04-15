@@ -1,6 +1,7 @@
 package edu.temple.bookcase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,11 +16,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import edu.temple.audiobookplayer.AudiobookService;
+
 
 public class BookDetailsFragment extends Fragment {
 
     //Name of book
     private Book book;
+
+    AudiobookService audiobookService;
+    boolean audioBound = false;
 
     public BookDetailsFragment() {
         // Required empty public constructor
@@ -53,10 +59,11 @@ public class BookDetailsFragment extends Fragment {
         ImageView bookCover = v.findViewById(R.id.bookCover);
         TextView bookAuthor = v.findViewById(R.id.bookAuthor);
         TextView bookPublishDate = v.findViewById(R.id.bookPublishDate);
-        SeekBar progressBar = v.findViewById(R.id.progressBar);
+        final SeekBar progressBar = v.findViewById(R.id.progressBar);
         Button pauseButton = v.findViewById(R.id.pauseButton);
-        Button playButton = v.findViewById(R.id.playButton);
+        final Button playButton = v.findViewById(R.id.playButton);
         Button stopButton = v.findViewById(R.id.stopButton);
+        progressBar.setMax(book.getDuration());
         if (book != null) {
 
             bookTitle.setText(book.getTitle());
@@ -65,12 +72,51 @@ public class BookDetailsFragment extends Fragment {
             bookAuthor.setText(book.getAuthor());
             bookPublishDate.setText(String.valueOf(book.getPublished()));
         }
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((audioControl) getActivity()).playAudio(book.getId());
+            }
+        });
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                ((audioControl) getActivity()).pauseAudio();
+
             }
         });
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((audioControl) getActivity()).stopAudio();
+            }
+        });
+        progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                ((audioControl) getActivity()).seekToAudio(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
         return v;
+    }
+
+    public interface audioControl {
+        void pauseAudio();
+
+        void playAudio(int bookId);
+
+        void stopAudio();
+
+        void seekToAudio(int position);
     }
 }
