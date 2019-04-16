@@ -87,6 +87,7 @@ public class BookDetailsFragmentLandscape extends Fragment {
 
             }
         });
+
         return v;
     }
 

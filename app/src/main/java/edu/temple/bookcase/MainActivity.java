@@ -39,10 +39,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     Button searchButtonLandscape;
     Book currentBook;
 
-    private AudiobookService audiobookService;
-    private Intent playIntent;
-    private boolean audioBound = false;
-    private AudiobookService.MediaControlBinder mediaControlBinder;
+    AudiobookService audiobookService;
+    Intent playIntent;
+    boolean audioBound = false;
+    AudiobookService.MediaControlBinder mediaControlBinder;
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             searchButtonLandscape = findViewById(R.id.searchButtonLandscape);
             bookListFragment = new BookListFragment();
             bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
+
             getSupportFragmentManager().beginTransaction().add(R.id.bookListLandscape, bookListFragment).commit();
             getSupportFragmentManager().beginTransaction().add(R.id.bookDetailsLandscape, bookDetailsFragmentLandscape).commit();
 
@@ -68,13 +70,9 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             searchButtonLandscape.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
                     Thread t2 = new Thread() {
                         @Override
                         public void run() {
-
-
                             try {
                                 String searchQueryLandscape = searchBoxLandscape.getText().toString();
                                 URL bookUrl = new URL("https://kamorris.com/lab/audlib/booksearch.php?search=" + searchQueryLandscape);
@@ -108,18 +106,17 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
                 }
             });
+
             playIntent = new Intent(this, AudiobookService.class);
             bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-
-
 
         } else {
             //Portrait mode
             viewPager = findViewById(R.id.viewPager);
-
             viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<BookDetailsFragment>()));
 
             searchBox = findViewById(R.id.searchBox);
+
             searchButton = findViewById(R.id.searchButton);
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,10 +159,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     t.start();
                 }
             });
+
             playIntent = new Intent(this, AudiobookService.class);
             bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-        }
 
+        }
 
     }
 
@@ -222,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         public void onServiceConnected(ComponentName name, IBinder service) {
             audioBound = true;
             mediaControlBinder = (AudiobookService.MediaControlBinder) service;
+            mediaControlBinder.setProgressHandler(handler);
         }
 
         @Override
@@ -286,4 +285,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     public void seekToAudioLandscape(int position) {
         mediaControlBinder.seekTo(position);
     }
+
+
 }

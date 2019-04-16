@@ -97,6 +97,8 @@ public class BookDetailsFragment extends Fragment {
                 ((audioControl) getActivity()).stopAudio();
             }
         });
+
+
         progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -116,6 +118,7 @@ public class BookDetailsFragment extends Fragment {
         });
 
         return v;
+
     }
     public interface audioControl {
         void pauseAudio();
@@ -126,6 +129,5 @@ public class BookDetailsFragment extends Fragment {
 
         void seekToAudio(int position);
 
-        //void setProgress();
     }
 }
