@@ -27,11 +27,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         }
         notifyDataSetChanged(); // FragmentStatePagetAdapter object.
     }
-
-    public BookDetailsFragment getBookFragment(int position) {
-        return bookDetailsFragmentsList.get(position);
-    }
-
     @Override
     public Fragment getItem(int i) {
         return bookDetailsFragmentsList.get(i);
