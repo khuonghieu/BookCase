@@ -26,6 +26,7 @@ public class BookDetailsFragment extends Fragment {
 
     //Name of book
     private Book book;
+    SeekBar progressBar;
 
     AudiobookService audiobookService;
     boolean audioBound = false;
@@ -62,7 +63,7 @@ public class BookDetailsFragment extends Fragment {
         ImageView bookCover = v.findViewById(R.id.bookCover);
         TextView bookAuthor = v.findViewById(R.id.bookAuthor);
         TextView bookPublishDate = v.findViewById(R.id.bookPublishDate);
-        final SeekBar progressBar = v.findViewById(R.id.progressBar);
+        progressBar = v.findViewById(R.id.progressBar);
         Button pauseButton = v.findViewById(R.id.pauseButton);
         final Button playButton = v.findViewById(R.id.playButton);
         Button stopButton = v.findViewById(R.id.stopButton);
@@ -81,6 +82,7 @@ public class BookDetailsFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((audioControl) getActivity()).stopAudio();
                 ((audioControl) getActivity()).playAudio(book.getId());
             }
         });
@@ -120,6 +122,11 @@ public class BookDetailsFragment extends Fragment {
         return v;
 
     }
+
+    public SeekBar getProgressBar() {
+        return progressBar;
+    }
+
     public interface audioControl {
         void pauseAudio();
 

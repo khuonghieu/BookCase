@@ -57,6 +57,7 @@ public class BookDetailsFragmentLandscape extends Fragment {
         playLandscape.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((audioControlLandscape) getActivity()).stopAudioLandscape();
                 ((audioControlLandscape) getActivity()).playAudioLandscape(book.getId());
             }
         });
@@ -105,6 +106,10 @@ public class BookDetailsFragmentLandscape extends Fragment {
         bookPublishDateLandscape.setText(String.valueOf(book.getPublished()));
     }
 
+    public SeekBar getSeekBarLandscape() {
+        return seekBar;
+    }
+
     public interface audioControlLandscape {
         void pauseAudioLandscape();
 
@@ -114,6 +119,5 @@ public class BookDetailsFragmentLandscape extends Fragment {
 
         void seekToAudioLandscape(int position);
 
-        //void setProgress();
     }
 }

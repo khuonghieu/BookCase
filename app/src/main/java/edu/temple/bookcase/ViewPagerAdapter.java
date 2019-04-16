@@ -12,8 +12,7 @@ import java.util.ArrayList;
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
 
-
-    private ArrayList<BookDetailsFragment> bookDetailsFragmentsList;
+    public ArrayList<BookDetailsFragment> bookDetailsFragmentsList;
 
     public ViewPagerAdapter(FragmentManager fm, ArrayList<BookDetailsFragment> bookDetailsFragments) {
         super(fm);
@@ -27,6 +26,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             Log.d("New Books", book.getTitle()); // Populate
         }
         notifyDataSetChanged(); // FragmentStatePagetAdapter object.
+    }
+
+    public BookDetailsFragment getBookFragment(int position) {
+        return bookDetailsFragmentsList.get(position);
     }
 
     @Override

@@ -110,6 +110,17 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             playIntent = new Intent(this, AudiobookService.class);
             bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
+            handler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    bookDetailsFragmentLandscape.getSeekBarLandscape().setProgress(msg.what);
+                    Log.d("handler", Integer.toString(msg.what));
+                    return false;
+                }
+            });
+
+
+
         } else {
             //Portrait mode
             viewPager = findViewById(R.id.viewPager);
@@ -162,6 +173,15 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
             playIntent = new Intent(this, AudiobookService.class);
             bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+            handler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    BookDetailsFragment bookDetailsFragment = (BookDetailsFragment) ((ViewPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+                    bookDetailsFragment.getProgressBar().setProgress(msg.what);
+                    Log.d("handler", Integer.toString(msg.what));
+                    return false;
+                }
+            });
 
         }
 
