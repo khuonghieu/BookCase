@@ -1,11 +1,10 @@
 package edu.temple.bookcase;
 
+import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,8 +15,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import edu.temple.audiobookplayer.AudiobookService;
 
@@ -27,7 +29,9 @@ public class BookDetailsFragment extends Fragment {
     //Name of book
     private Book book;
     SeekBar progressBar;
-
+    Button download;
+    Button delete;
+    String baseDownloadURL = "https://kamorris.com/lab/audlib/download.php?id=";
     AudiobookService audiobookService;
     boolean audioBound = false;
 
@@ -66,7 +70,7 @@ public class BookDetailsFragment extends Fragment {
         progressBar = v.findViewById(R.id.progressBar);
         Button pauseButton = v.findViewById(R.id.pauseButton);
         final Button playButton = v.findViewById(R.id.playButton);
-        Button stopButton = v.findViewById(R.id.stopButton);
+        final Button stopButton = v.findViewById(R.id.stopButton);
 
         progressBar.setMax(book.getDuration());
         //((audioControl)getActivity()).setProgress();
@@ -116,6 +120,35 @@ public class BookDetailsFragment extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        download = v.findViewById(R.id.download);
+
+        download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File bookFile = new File(Environment.DIRECTORY_DOWNLOADS + File.separator + book.getTitle() + ".mp3");
+                if (!bookFile.exists()) {
+
+                    DownloadManager downloadmanager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+                    Uri uri = Uri.parse(baseDownloadURL + book.getId());
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    request.setDescription("Downloading");
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3");
+                    downloadmanager.enqueue(request);
+                } else {
+                    Toast.makeText(getContext(), "Already have", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        delete = v.findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

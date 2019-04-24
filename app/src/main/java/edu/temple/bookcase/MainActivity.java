@@ -1,5 +1,6 @@
 package edu.temple.bookcase;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 10089);
         isTwoPane = findViewById(R.id.bookListLandscape) != null;
 
         if (isTwoPane) {
