@@ -62,20 +62,23 @@ public class BookDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
-        bookDetailPref = this.getActivity().getSharedPreferences(book.getTitle() + " orient", Context.MODE_PRIVATE);
+        bookDetailPref = this.getActivity().getSharedPreferences("" + book.getTitle() + " orient", Context.MODE_PRIVATE);
         editor = bookDetailPref.edit();
+        Log.d("pref", bookDetailPref.toString());
         TextView bookTitle = v.findViewById(R.id.bookTitle);
         ImageView bookCover = v.findViewById(R.id.bookCover);
         TextView bookAuthor = v.findViewById(R.id.bookAuthor);
         TextView bookPublishDate = v.findViewById(R.id.bookPublishDate);
         progressBar = v.findViewById(R.id.progressBar);
+        progressBar.setMax(book.getDuration());
+
         progressBar.setProgress(bookDetailPref.getInt("Progress Bar", 0));
+
         Button pauseButton = v.findViewById(R.id.pauseButton);
         final Button playButton = v.findViewById(R.id.playButton);
         final Button stopButton = v.findViewById(R.id.stopButton);
 
-        progressBar.setMax(book.getDuration());
-        //((audioControl)getActivity()).setProgress();
+
 
         if (book != null) {
             bookTitle.setText(book.getTitle());
@@ -88,13 +91,14 @@ public class BookDetailsFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("pref check", String.valueOf(bookDetailPref.getInt("Progress Bar", 0)));
                 ((audioControl) getActivity()).stopAudio();
                 File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
                 if (!audio.exists()) {
-
-                    ((audioControl) getActivity()).playAudio(book.getId());
+                    Log.d("prog", String.valueOf(progressBar.getProgress()));
+                    ((audioControl) getActivity()).playAudio(book.getId(), progressBar.getProgress());
                 } else {
-                    ((audioControl) getActivity()).playAudio(audio);
+                    ((audioControl) getActivity()).playAudio(audio, progressBar.getProgress());
                 }
             }
         });
@@ -186,9 +190,9 @@ public class BookDetailsFragment extends Fragment {
 
         void pauseAudio();
 
-        void playAudio(int bookId);
+        void playAudio(int bookId, int position);
 
-        void playAudio(File audioFile);
+        void playAudio(File audioFile, int position);
 
         void stopAudio();
 

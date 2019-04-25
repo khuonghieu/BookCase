@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     bookDetailsFragmentLandscape.getSeekBarLandscape().setProgress(msg.what);
                     Log.d("handler", Integer.toString(msg.what));
                     bookDetailsFragmentLandscape.getEditor().putInt("Progress Bar Land", msg.what);
-                    bookDetailsFragmentLandscape.getEditor().commit();
+                    bookDetailsFragmentLandscape.getEditor().apply();
                     return false;
                 }
             });
@@ -193,8 +193,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 public boolean handleMessage(Message msg) {
                     BookDetailsFragment bookDetailsFragment = (BookDetailsFragment) ((ViewPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
                     bookDetailsFragment.getProgressBar().setProgress(msg.what);
-                    bookDetailsFragment.getEditor().putInt("Progress Bar", msg.what);
-                    bookDetailsFragment.getEditor().commit();
+                    if (msg.what < 10) {
+                        bookDetailsFragment.getEditor().putInt("Progress Bar", 0);
+                        bookDetailsFragment.getEditor().apply();
+                    } else {
+                        bookDetailsFragment.getEditor().putInt("Progress Bar", msg.what - 10);
+                        bookDetailsFragment.getEditor().apply();
+                    }
                     Log.d("handler", Integer.toString(msg.what));
                     return false;
                 }
@@ -217,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 for (int i = 0; i < responseArray.length(); i++) {
                     JSONObject jsonObject = responseArray.getJSONObject(i);
                     bookArrayList.add(new Book(jsonObject));
-                    Log.d("check", jsonObject.getString("title"));
+                    //Log.d("check", jsonObject.getString("title"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -281,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         bookListFragment.setJsonArray(jsonArray);
     }
 
+    //Oriental Interface
 
     @Override
     public void pauseAudio() {
@@ -288,13 +294,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
     @Override
-    public void playAudio(int bookId) {
-        mediaControlBinder.play(bookId);
+    public void playAudio(int bookId, int position) {
+        mediaControlBinder.play(bookId, position);
     }
 
     @Override
-    public void playAudio(File audioFile) {
-        mediaControlBinder.play(audioFile);
+    public void playAudio(File audioFile, int position) {
+        mediaControlBinder.play(audioFile, position);
     }
 
     @Override
@@ -308,19 +314,26 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     }
 
 
+    //Landscape Interface
+
     @Override
     public void pauseAudioLandscape() {
         mediaControlBinder.pause();
     }
 
     @Override
-    public void playAudioLandscape(int bookId) {
-        mediaControlBinder.play(bookId);
+    public void playAudioLandscape(int bookId, int position) {
+        mediaControlBinder.play(bookId, position);
     }
 
     @Override
     public void stopAudioLandscape() {
         mediaControlBinder.stop();
+    }
+
+    @Override
+    public void playAudioLandscape(File audioFile, int position) {
+        mediaControlBinder.play(audioFile, position);
     }
 
     @Override

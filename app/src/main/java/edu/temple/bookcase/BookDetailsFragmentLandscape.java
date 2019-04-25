@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+
 public class BookDetailsFragmentLandscape extends Fragment {
 
 
@@ -25,9 +28,9 @@ public class BookDetailsFragmentLandscape extends Fragment {
     ImageView bookCoverLandscape;
     TextView bookAuthorLandscape;
     TextView bookPublishDateLandscape;
-    SharedPreferences bookDetailLandPref;
+    private SharedPreferences bookDetailLandPref;
 
-    SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
 
     Book book;
     SeekBar seekBar;
@@ -41,7 +44,7 @@ public class BookDetailsFragmentLandscape extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details_fragment_landscape, container, false);
 
-        bookDetailLandPref = this.getActivity().getSharedPreferences(book.getTitle() + " land", Context.MODE_PRIVATE);
+        bookDetailLandPref = this.getActivity().getSharedPreferences("" + book.getTitle() + " land", Context.MODE_PRIVATE);
         editor = bookDetailLandPref.edit();
         bookTitleLandscape = v.findViewById(R.id.bookTitleLandscape);
         bookCoverLandscape = v.findViewById(R.id.bookCoverLandscape);
@@ -52,7 +55,6 @@ public class BookDetailsFragmentLandscape extends Fragment {
         Button playLandscape = v.findViewById(R.id.playButtonLandscape);
         Button stopLandscape = v.findViewById(R.id.stopButtonLandscape);
         seekBar = v.findViewById(R.id.seekBarLandscape);
-        seekBar.setProgress(bookDetailLandPref.getInt("Progress Bar Land", 0));
 
         pauseLandscape.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +66,13 @@ public class BookDetailsFragmentLandscape extends Fragment {
         playLandscape.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((audioControlLandscape) getActivity()).stopAudioLandscape();
-                ((audioControlLandscape) getActivity()).playAudioLandscape(book.getId());
+                File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
+                if (!audio.exists()) {
+
+                    ((BookDetailsFragmentLandscape.audioControlLandscape) getActivity()).playAudioLandscape(book.getId(), seekBar.getProgress());
+                } else {
+                    ((BookDetailsFragmentLandscape.audioControlLandscape) getActivity()).playAudioLandscape(audio, seekBar.getProgress());
+                }
             }
         });
 
@@ -104,6 +111,11 @@ public class BookDetailsFragmentLandscape extends Fragment {
         seekBar.setProgress(0);
         seekBar = getView().findViewById(R.id.seekBarLandscape);
         seekBar.setMax(book.getDuration());
+        if (bookDetailLandPref.getInt("Progress Bar Land", 0) < 10) {
+            seekBar.setProgress(0);
+        } else {
+            seekBar.setProgress(bookDetailLandPref.getInt("Progress Bar Land", 0) - 10);
+        }
     }
 
     public void displayBookName(Book book) {
@@ -121,9 +133,11 @@ public class BookDetailsFragmentLandscape extends Fragment {
 
         void pauseAudioLandscape();
 
-        void playAudioLandscape(int bookId);
+        void playAudioLandscape(int bookId, int position);
 
         void stopAudioLandscape();
+
+        void playAudioLandscape(File audioFile, int timeMark);
 
         void seekToAudioLandscape(int position);
 
