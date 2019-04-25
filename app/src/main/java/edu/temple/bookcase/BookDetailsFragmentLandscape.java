@@ -45,9 +45,6 @@ public class BookDetailsFragmentLandscape extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details_fragment_landscape, container, false);
 
-
-        bookDetailLandPref = this.getActivity().getSharedPreferences("" + book.getTitle() + " land", Context.MODE_PRIVATE);
-        editor = bookDetailLandPref.edit();
         bookTitleLandscape = v.findViewById(R.id.bookTitleLandscape);
         bookCoverLandscape = v.findViewById(R.id.bookCoverLandscape);
         bookAuthorLandscape = v.findViewById(R.id.bookAuthorLandscape);
@@ -117,13 +114,19 @@ public class BookDetailsFragmentLandscape extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        seekBar.setProgress(bookDetailLandPref.getInt("Progress Bar", 0));
+    public void onResume() {
+        super.onResume();
+        if (book != null) {
+            seekBar.setProgress(bookDetailLandPref.getInt("Progress Bar Land", 0) - 10);
+        }
     }
 
     public void setBook(Book book) {
         this.book = book;
+        if (book != null) {
+            bookDetailLandPref = this.getActivity().getSharedPreferences("" + book.getTitle() + " land", Context.MODE_PRIVATE);
+            editor = bookDetailLandPref.edit();
+        }
         seekBar.setProgress(0);
         seekBar = getView().findViewById(R.id.seekBarLandscape);
         seekBar.setMax(book.getDuration());

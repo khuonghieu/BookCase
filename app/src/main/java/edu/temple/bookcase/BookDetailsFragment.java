@@ -186,8 +186,8 @@ public class BookDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         progressBar.setProgress(bookDetailPref.getInt("Progress Bar", 0));
     }
 

@@ -202,11 +202,10 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     Log.d("handler orient", Integer.toString(msg.what));
                     if (msg.what < 10) {
                         bookDetailsFragment.getEditor().putInt("Progress Bar", 0);
-                        bookDetailsFragment.getEditor().apply();
                     } else {
                         bookDetailsFragment.getEditor().putInt("Progress Bar", msg.what - 10);
-                        bookDetailsFragment.getEditor().apply();
                     }
+                    bookDetailsFragment.getEditor().apply();
                     return false;
                 }
             });
