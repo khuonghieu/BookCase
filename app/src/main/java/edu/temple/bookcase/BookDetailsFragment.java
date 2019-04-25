@@ -148,10 +148,10 @@ public class BookDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                File check = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
+                File check = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), book.getTitle() + ".mp3");
 
                 Log.d("check", check.getAbsolutePath());
-                Log.d("isFile", String.valueOf(check.isFile()));
+                Log.d("exists", String.valueOf(check.exists()));
 
                 if (!check.exists()) {
 
@@ -160,7 +160,7 @@ public class BookDetailsFragment extends Fragment {
                     DownloadManager.Request request = new DownloadManager.Request(uri);
                     request.setDescription("Downloading");
                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalFilesDir(getContext(), Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3");
+                    request.setDestinationInExternalFilesDir(getContext(), Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), book.getTitle() + ".mp3");
                     downloadmanager.enqueue(request);
                 } else {
                     Toast.makeText(getContext(), "Already have", Toast.LENGTH_SHORT).show();
@@ -172,7 +172,7 @@ public class BookDetailsFragment extends Fragment {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File check = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3");
+                File check = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), book.getTitle() + ".mp3");
                 Log.d("check", check.getAbsolutePath());
                 if (check.exists()) {
                     check.delete();
