@@ -34,6 +34,7 @@ public class BookDetailsFragmentLandscape extends Fragment {
 
     Book book;
     SeekBar seekBar;
+
     public BookDetailsFragmentLandscape() {
         // Required empty public constructor
     }
@@ -43,6 +44,7 @@ public class BookDetailsFragmentLandscape extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details_fragment_landscape, container, false);
+
 
         bookDetailLandPref = this.getActivity().getSharedPreferences("" + book.getTitle() + " land", Context.MODE_PRIVATE);
         editor = bookDetailLandPref.edit();
@@ -66,13 +68,18 @@ public class BookDetailsFragmentLandscape extends Fragment {
         playLandscape.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
-                if (!audio.exists()) {
-
-                    ((BookDetailsFragmentLandscape.audioControlLandscape) getActivity()).playAudioLandscape(book.getId(), seekBar.getProgress());
-                } else {
-                    ((BookDetailsFragmentLandscape.audioControlLandscape) getActivity()).playAudioLandscape(audio, seekBar.getProgress());
-                }
+                Thread t = new Thread() {
+                    @Override
+                    public void run() {
+                        File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
+                        if (!audio.exists()) {
+                            ((BookDetailsFragmentLandscape.audioControlLandscape) getActivity()).playAudioLandscape(book.getId(), seekBar.getProgress());
+                        } else {
+                            ((BookDetailsFragmentLandscape.audioControlLandscape) getActivity()).playAudioLandscape(audio, seekBar.getProgress());
+                        }
+                    }
+                };
+                t.start();
             }
         });
 
@@ -80,6 +87,9 @@ public class BookDetailsFragmentLandscape extends Fragment {
             @Override
             public void onClick(View v) {
                 ((audioControlLandscape) getActivity()).stopAudioLandscape();
+                editor.putInt("Progress Bar Land", 0);
+                editor.apply();
+                seekBar.setProgress(0);
             }
         });
 
@@ -106,17 +116,20 @@ public class BookDetailsFragmentLandscape extends Fragment {
         return v;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        seekBar.setProgress(bookDetailLandPref.getInt("Progress Bar", 0));
+    }
+
     public void setBook(Book book) {
         this.book = book;
         seekBar.setProgress(0);
         seekBar = getView().findViewById(R.id.seekBarLandscape);
         seekBar.setMax(book.getDuration());
-        if (bookDetailLandPref.getInt("Progress Bar Land", 0) < 10) {
-            seekBar.setProgress(0);
-        } else {
-            seekBar.setProgress(bookDetailLandPref.getInt("Progress Bar Land", 0) - 10);
-        }
+        seekBar.setProgress(bookDetailLandPref.getInt("Progress Bar Land", 0));
     }
+
 
     public void displayBookName(Book book) {
         bookTitleLandscape.setText(book.getTitle());

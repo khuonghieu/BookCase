@@ -125,9 +125,14 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 @Override
                 public boolean handleMessage(Message msg) {
                     bookDetailsFragmentLandscape.getSeekBarLandscape().setProgress(msg.what);
-                    Log.d("handler", Integer.toString(msg.what));
-                    bookDetailsFragmentLandscape.getEditor().putInt("Progress Bar Land", msg.what);
-                    bookDetailsFragmentLandscape.getEditor().apply();
+                    Log.d("handler Land", Integer.toString(msg.what));
+                    if (msg.what < 10) {
+                        bookDetailsFragmentLandscape.getEditor().putInt("Progress Bar Land", 0);
+                        bookDetailsFragmentLandscape.getEditor().apply();
+                    } else {
+                        bookDetailsFragmentLandscape.getEditor().putInt("Progress Bar Land", msg.what - 10);
+                        bookDetailsFragmentLandscape.getEditor().apply();
+                    }
                     return false;
                 }
             });
@@ -194,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 public boolean handleMessage(Message msg) {
                     BookDetailsFragment bookDetailsFragment = (BookDetailsFragment) ((ViewPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
                     bookDetailsFragment.getProgressBar().setProgress(msg.what);
+                    Log.d("handler orient", Integer.toString(msg.what));
                     if (msg.what < 10) {
                         bookDetailsFragment.getEditor().putInt("Progress Bar", 0);
                         bookDetailsFragment.getEditor().apply();
@@ -201,7 +207,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                         bookDetailsFragment.getEditor().putInt("Progress Bar", msg.what - 10);
                         bookDetailsFragment.getEditor().apply();
                     }
-                    Log.d("handler", Integer.toString(msg.what));
                     return false;
                 }
             });

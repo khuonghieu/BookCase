@@ -73,7 +73,6 @@ public class BookDetailsFragment extends Fragment {
         progressBar.setMax(book.getDuration());
 
 
-
         Button pauseButton = v.findViewById(R.id.pauseButton);
         final Button playButton = v.findViewById(R.id.playButton);
         final Button stopButton = v.findViewById(R.id.stopButton);
@@ -91,14 +90,21 @@ public class BookDetailsFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("pref check", String.valueOf(bookDetailPref.getInt("Progress Bar", 0)));
-                File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
-                if (!audio.exists()) {
-                    ((audioControl) getActivity()).playAudio(book.getId(), progressBar.getProgress());
-                    Log.d("prog", String.valueOf(progressBar.getProgress()));
-                } else {
-                    ((audioControl) getActivity()).playAudio(audio, progressBar.getProgress());
-                }
+                Thread t = new Thread() {
+                    @Override
+                    public void run() {
+                        Log.d("pref check", String.valueOf(bookDetailPref.getInt("Progress Bar", 0)));
+                        File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
+                        if (!audio.exists()) {
+                            ((audioControl) getActivity()).playAudio(book.getId(), progressBar.getProgress());
+                            Log.d("prog", String.valueOf(progressBar.getProgress()));
+                        } else {
+                            ((audioControl) getActivity()).playAudio(audio, progressBar.getProgress());
+                        }
+                    }
+                };
+                t.start();
+
             }
         });
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +118,9 @@ public class BookDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((audioControl) getActivity()).stopAudio();
+                editor.putInt("Progress Bar", 0);
+                editor.apply();
+                progressBar.setProgress(0);
             }
         });
 
@@ -177,15 +186,9 @@ public class BookDetailsFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        ((audioControl) getActivity()).pauseAudio();
-    }
-
-    @Override
     public void onStart() {
-        progressBar.setProgress(bookDetailPref.getInt("Progress Bar", 0));
         super.onStart();
+        progressBar.setProgress(bookDetailPref.getInt("Progress Bar", 0));
     }
 
     @Override
