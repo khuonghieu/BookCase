@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             searchButton.performClick();
             playIntent = new Intent(this, AudiobookService.class);
             bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+
             handler = new Handler(new Handler.Callback() {
                 @Override
                 public boolean handleMessage(Message msg) {

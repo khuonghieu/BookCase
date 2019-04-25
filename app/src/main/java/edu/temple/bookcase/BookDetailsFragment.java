@@ -27,7 +27,7 @@ public class BookDetailsFragment extends Fragment {
 
     //Name of book
     private Book book;
-    SeekBar progressBar;
+    private SeekBar progressBar;
     Button download;
     Button delete;
     String baseDownloadURL = "https://kamorris.com/lab/audlib/download.php?id=";
@@ -72,7 +72,7 @@ public class BookDetailsFragment extends Fragment {
         progressBar = v.findViewById(R.id.progressBar);
         progressBar.setMax(book.getDuration());
 
-        progressBar.setProgress(bookDetailPref.getInt("Progress Bar", 0));
+
 
         Button pauseButton = v.findViewById(R.id.pauseButton);
         final Button playButton = v.findViewById(R.id.playButton);
@@ -92,11 +92,10 @@ public class BookDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("pref check", String.valueOf(bookDetailPref.getInt("Progress Bar", 0)));
-                ((audioControl) getActivity()).stopAudio();
                 File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
                 if (!audio.exists()) {
-                    Log.d("prog", String.valueOf(progressBar.getProgress()));
                     ((audioControl) getActivity()).playAudio(book.getId(), progressBar.getProgress());
+                    Log.d("prog", String.valueOf(progressBar.getProgress()));
                 } else {
                     ((audioControl) getActivity()).playAudio(audio, progressBar.getProgress());
                 }
@@ -175,6 +174,18 @@ public class BookDetailsFragment extends Fragment {
 
         return v;
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((audioControl) getActivity()).pauseAudio();
+    }
+
+    @Override
+    public void onStart() {
+        progressBar.setProgress(bookDetailPref.getInt("Progress Bar", 0));
+        super.onStart();
     }
 
     @Override
