@@ -5,10 +5,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -51,13 +54,17 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 10089);
+        SharedPreferences pref = getSharedPreferences("MainActivityPref", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = pref.edit();
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10089);
         isTwoPane = findViewById(R.id.bookListLandscape) != null;
 
         if (isTwoPane) {
 
             //Landscape mode
             searchBoxLandscape = findViewById(R.id.searchBoxLandscape);
+            searchBoxLandscape.setText(pref.getString("Landscape Search", ""));
             searchButtonLandscape = findViewById(R.id.searchButtonLandscape);
             bookListFragment = new BookListFragment();
             bookDetailsFragmentLandscape = new BookDetailsFragmentLandscape();
@@ -71,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             searchButtonLandscape.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    editor.putString("Landscape Search", searchBoxLandscape.getText().toString());
+                    editor.apply();
                     Thread t2 = new Thread() {
                         @Override
                         public void run() {
@@ -107,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
 
                 }
             });
+            searchButtonLandscape.performClick();
 
             playIntent = new Intent(this, AudiobookService.class);
             bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
@@ -128,12 +138,13 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
             viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), new ArrayList<BookDetailsFragment>()));
 
             searchBox = findViewById(R.id.searchBox);
-
+            searchBox.setText(pref.getString("Orient Search", ""));
             searchButton = findViewById(R.id.searchButton);
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    editor.putString("Orient Search", searchBox.getText().toString());
+                    editor.apply();
                     Thread t = new Thread() {
                         @Override
                         public void run() {
@@ -172,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 }
             });
 
+            searchButton.performClick();
             playIntent = new Intent(this, AudiobookService.class);
             bindService(playIntent, serviceConnection, Context.BIND_AUTO_CREATE);
             handler = new Handler(new Handler.Callback() {
@@ -179,6 +191,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 public boolean handleMessage(Message msg) {
                     BookDetailsFragment bookDetailsFragment = (BookDetailsFragment) ((ViewPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
                     bookDetailsFragment.getProgressBar().setProgress(msg.what);
+                    bookDetailsFragment.getEditor().putInt("Progress Bar", msg.what);
+                    bookDetailsFragment.getEditor().apply();
                     Log.d("handler", Integer.toString(msg.what));
                     return false;
                 }
@@ -274,6 +288,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
     @Override
     public void playAudio(int bookId) {
         mediaControlBinder.play(bookId);
+    }
+
+    @Override
+    public void playAudio(File audioFile) {
+        mediaControlBinder.play(audioFile);
     }
 
     @Override

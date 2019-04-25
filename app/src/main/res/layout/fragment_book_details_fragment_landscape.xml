@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".BookDetailsFragmentLandscape">
 
     <LinearLayout
@@ -19,18 +19,18 @@
         <TextView
             android:id="@+id/bookTitleLandscape"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:textSize="24sp" />
 
         <ImageView
             android:id="@+id/bookCoverLandscape"
             android:layout_width="match_parent"
-            android:layout_height="144dp"
+            android:layout_height="138dp"
             tools:src="@tools:sample/avatars[3]" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -48,29 +48,51 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="36dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/pauseButtonLandscape"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Pause" />
 
             <Button
                 android:id="@+id/playButtonLandscape"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Play" />
 
             <Button
                 android:id="@+id/stopButtonLandscape"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Stop" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/downloadLand"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Download" />
+
+            <Button
+                android:id="@+id/deleteLand"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Delete" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

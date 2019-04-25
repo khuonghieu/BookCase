@@ -2,6 +2,7 @@ package edu.temple.bookcase;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,8 +22,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
-import edu.temple.audiobookplayer.AudiobookService;
-
 
 public class BookDetailsFragment extends Fragment {
 
@@ -32,8 +31,9 @@ public class BookDetailsFragment extends Fragment {
     Button download;
     Button delete;
     String baseDownloadURL = "https://kamorris.com/lab/audlib/download.php?id=";
-    AudiobookService audiobookService;
-    boolean audioBound = false;
+    SharedPreferences bookDetailPref;
+
+    SharedPreferences.Editor editor;
 
     public BookDetailsFragment() {
         // Required empty public constructor
@@ -62,12 +62,14 @@ public class BookDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
-
+        bookDetailPref = this.getActivity().getSharedPreferences("BookDetail Pref", Context.MODE_PRIVATE);
+        editor = bookDetailPref.edit();
         TextView bookTitle = v.findViewById(R.id.bookTitle);
         ImageView bookCover = v.findViewById(R.id.bookCover);
         TextView bookAuthor = v.findViewById(R.id.bookAuthor);
         TextView bookPublishDate = v.findViewById(R.id.bookPublishDate);
         progressBar = v.findViewById(R.id.progressBar);
+        progressBar.setProgress(bookDetailPref.getInt("Progress Bar", 0));
         Button pauseButton = v.findViewById(R.id.pauseButton);
         final Button playButton = v.findViewById(R.id.playButton);
         final Button stopButton = v.findViewById(R.id.stopButton);
@@ -87,7 +89,13 @@ public class BookDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((audioControl) getActivity()).stopAudio();
-                ((audioControl) getActivity()).playAudio(book.getId());
+                File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
+                if (!audio.exists()) {
+
+                    ((audioControl) getActivity()).playAudio(book.getId());
+                } else {
+                    ((audioControl) getActivity()).playAudio(audio);
+                }
             }
         });
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -124,19 +132,23 @@ public class BookDetailsFragment extends Fragment {
         });
 
         download = v.findViewById(R.id.download);
-
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File bookFile = new File(Environment.DIRECTORY_DOWNLOADS + File.separator + book.getTitle() + ".mp3");
-                if (!bookFile.exists()) {
+
+                File check = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
+
+                Log.d("check", check.getAbsolutePath());
+                Log.d("isFile", String.valueOf(check.isFile()));
+
+                if (!check.exists()) {
 
                     DownloadManager downloadmanager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
                     Uri uri = Uri.parse(baseDownloadURL + book.getId());
                     DownloadManager.Request request = new DownloadManager.Request(uri);
                     request.setDescription("Downloading");
                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3");
+                    request.setDestinationInExternalFilesDir(getContext(), Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3");
                     downloadmanager.enqueue(request);
                 } else {
                     Toast.makeText(getContext(), "Already have", Toast.LENGTH_SHORT).show();
@@ -148,7 +160,12 @@ public class BookDetailsFragment extends Fragment {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                File check = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3");
+                Log.d("check", check.getAbsolutePath());
+                if (check.exists()) {
+                    check.delete();
+                    Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -156,18 +173,31 @@ public class BookDetailsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
     public SeekBar getProgressBar() {
         return progressBar;
     }
 
     public interface audioControl {
+
         void pauseAudio();
 
         void playAudio(int bookId);
+
+        void playAudio(File audioFile);
 
         void stopAudio();
 
         void seekToAudio(int position);
 
+
+    }
+
+    public SharedPreferences.Editor getEditor() {
+        return editor;
     }
 }
