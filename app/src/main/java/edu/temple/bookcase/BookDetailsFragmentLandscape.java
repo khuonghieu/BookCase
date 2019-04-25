@@ -1,6 +1,7 @@
 package edu.temple.bookcase;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,10 +25,12 @@ public class BookDetailsFragmentLandscape extends Fragment {
     ImageView bookCoverLandscape;
     TextView bookAuthorLandscape;
     TextView bookPublishDateLandscape;
+    SharedPreferences bookDetailLandPref;
+
+    SharedPreferences.Editor editor;
 
     Book book;
     SeekBar seekBar;
-
     public BookDetailsFragmentLandscape() {
         // Required empty public constructor
     }
@@ -37,6 +40,9 @@ public class BookDetailsFragmentLandscape extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details_fragment_landscape, container, false);
+
+        bookDetailLandPref = this.getActivity().getSharedPreferences(book.getTitle() + " land", Context.MODE_PRIVATE);
+        editor = bookDetailLandPref.edit();
         bookTitleLandscape = v.findViewById(R.id.bookTitleLandscape);
         bookCoverLandscape = v.findViewById(R.id.bookCoverLandscape);
         bookAuthorLandscape = v.findViewById(R.id.bookAuthorLandscape);
@@ -46,6 +52,7 @@ public class BookDetailsFragmentLandscape extends Fragment {
         Button playLandscape = v.findViewById(R.id.playButtonLandscape);
         Button stopLandscape = v.findViewById(R.id.stopButtonLandscape);
         seekBar = v.findViewById(R.id.seekBarLandscape);
+        seekBar.setProgress(bookDetailLandPref.getInt("Progress Bar Land", 0));
 
         pauseLandscape.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +118,7 @@ public class BookDetailsFragmentLandscape extends Fragment {
     }
 
     public interface audioControlLandscape {
+
         void pauseAudioLandscape();
 
         void playAudioLandscape(int bookId);
@@ -119,5 +127,10 @@ public class BookDetailsFragmentLandscape extends Fragment {
 
         void seekToAudioLandscape(int position);
 
+
+    }
+
+    public SharedPreferences.Editor getEditor() {
+        return editor;
     }
 }

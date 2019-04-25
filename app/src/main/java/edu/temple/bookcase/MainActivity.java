@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                 public boolean handleMessage(Message msg) {
                     bookDetailsFragmentLandscape.getSeekBarLandscape().setProgress(msg.what);
                     Log.d("handler", Integer.toString(msg.what));
+                    bookDetailsFragmentLandscape.getEditor().putInt("Progress Bar Land", msg.what);
+                    bookDetailsFragmentLandscape.getEditor().commit();
                     return false;
                 }
             });
@@ -192,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     BookDetailsFragment bookDetailsFragment = (BookDetailsFragment) ((ViewPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
                     bookDetailsFragment.getProgressBar().setProgress(msg.what);
                     bookDetailsFragment.getEditor().putInt("Progress Bar", msg.what);
-                    bookDetailsFragment.getEditor().apply();
+                    bookDetailsFragment.getEditor().commit();
                     Log.d("handler", Integer.toString(msg.what));
                     return false;
                 }
