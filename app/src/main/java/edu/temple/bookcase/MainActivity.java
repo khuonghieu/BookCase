@@ -1,6 +1,5 @@
 package edu.temple.bookcase;
 
-import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -30,7 +28,7 @@ import java.util.ArrayList;
 import edu.temple.audiobookplayer.AudiobookService;
 
 public class MainActivity extends AppCompatActivity implements BookListFragment.getBook, BookDetailsFragment.audioControl, BookDetailsFragmentLandscape.audioControlLandscape {
-
+    final String KEYPREF = "progress bar";
     private boolean isTwoPane;
 
     BookListFragment bookListFragment;
@@ -55,8 +53,6 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         setContentView(R.layout.activity_main);
         SharedPreferences pref = getSharedPreferences("MainActivityPref", MODE_PRIVATE);
         final SharedPreferences.Editor editor = pref.edit();
-
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
 
         isTwoPane = findViewById(R.id.bookListLandscape) != null;
 
@@ -200,10 +196,11 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
                     BookDetailsFragment bookDetailsFragment = (BookDetailsFragment) ((ViewPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
                     bookDetailsFragment.getProgressBar().setProgress(msg.what);
                     Log.d("handler orient", Integer.toString(msg.what));
+
                     if (msg.what < 10) {
-                        bookDetailsFragment.getEditor().putInt("Progress Bar", 0);
+                        bookDetailsFragment.getEditor().putInt(KEYPREF, 0);
                     } else {
-                        bookDetailsFragment.getEditor().putInt("Progress Bar", msg.what - 10);
+                        bookDetailsFragment.getEditor().putInt(KEYPREF, msg.what - 10);
                     }
                     bookDetailsFragment.getEditor().apply();
                     return false;

@@ -1,17 +1,11 @@
 package edu.temple.bookcase;
 
-import android.Manifest;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,23 +18,12 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-
-import static java.lang.System.in;
 
 
 public class BookDetailsFragment extends Fragment {
@@ -52,7 +35,7 @@ public class BookDetailsFragment extends Fragment {
     Button delete;
     String baseDownloadURL = "https://kamorris.com/lab/audlib/download.php?id=";
     SharedPreferences bookDetailPref;
-
+    final static String KEYPREF = "progress bar";
     SharedPreferences.Editor editor;
 
     public BookDetailsFragment() {
@@ -83,7 +66,7 @@ public class BookDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
 
-        bookDetailPref = this.getActivity().getSharedPreferences("" + book.getTitle() + " orient", Context.MODE_PRIVATE);
+        bookDetailPref = this.getActivity().getSharedPreferences(book.getTitle(), Context.MODE_PRIVATE);
         editor = bookDetailPref.edit();
 
         TextView bookTitle = v.findViewById(R.id.bookTitle);
@@ -115,11 +98,15 @@ public class BookDetailsFragment extends Fragment {
             public void onClick(View v) {
 
 
-                File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
+                File audio = new File(getContext().getFilesDir(), book.getTitle() + ".mp3");
+
                 if (!audio.exists()) {
                     ((audioControl) getActivity()).playAudio(book.getId(), progressBar.getProgress());
+                    Log.d("playing", "from web");
                 } else {
                     ((audioControl) getActivity()).playAudio(audio, progressBar.getProgress());
+                    Log.d("playing", "from file");
+
                 }
 
 
@@ -136,7 +123,7 @@ public class BookDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((audioControl) getActivity()).stopAudio();
-                editor.putInt("Progress Bar", 0);
+                editor.putInt(KEYPREF, 0);
                 editor.apply();
                 progressBar.setProgress(0);
             }
@@ -221,7 +208,7 @@ public class BookDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        progressBar.setProgress(bookDetailPref.getInt("Progress Bar", 0));
+        progressBar.setProgress(bookDetailPref.getInt(KEYPREF, 0));
     }
 
     @Override
