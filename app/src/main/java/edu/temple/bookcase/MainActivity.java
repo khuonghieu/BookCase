@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements BookListFragment.
         SharedPreferences pref = getSharedPreferences("MainActivityPref", MODE_PRIVATE);
         final SharedPreferences.Editor editor = pref.edit();
 
-        this.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+
         isTwoPane = findViewById(R.id.bookListLandscape) != null;
 
         if (isTwoPane) {

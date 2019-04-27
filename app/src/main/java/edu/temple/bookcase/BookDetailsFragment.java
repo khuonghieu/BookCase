@@ -1,13 +1,17 @@
 package edu.temple.bookcase;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +24,23 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+
+import static java.lang.System.in;
 
 
 public class BookDetailsFragment extends Fragment {
@@ -62,21 +82,24 @@ public class BookDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_details, container, false);
+
         bookDetailPref = this.getActivity().getSharedPreferences("" + book.getTitle() + " orient", Context.MODE_PRIVATE);
         editor = bookDetailPref.edit();
-        Log.d("pref", bookDetailPref.toString());
+
         TextView bookTitle = v.findViewById(R.id.bookTitle);
+
         ImageView bookCover = v.findViewById(R.id.bookCover);
+
         TextView bookAuthor = v.findViewById(R.id.bookAuthor);
+
         TextView bookPublishDate = v.findViewById(R.id.bookPublishDate);
+
         progressBar = v.findViewById(R.id.progressBar);
         progressBar.setMax(book.getDuration());
-
 
         Button pauseButton = v.findViewById(R.id.pauseButton);
         final Button playButton = v.findViewById(R.id.playButton);
         final Button stopButton = v.findViewById(R.id.stopButton);
-
 
 
         if (book != null) {
@@ -90,20 +113,15 @@ public class BookDetailsFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Thread t = new Thread() {
-                    @Override
-                    public void run() {
-                        Log.d("pref check", String.valueOf(bookDetailPref.getInt("Progress Bar", 0)));
-                        File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
-                        if (!audio.exists()) {
-                            ((audioControl) getActivity()).playAudio(book.getId(), progressBar.getProgress());
-                            Log.d("prog", String.valueOf(progressBar.getProgress()));
-                        } else {
-                            ((audioControl) getActivity()).playAudio(audio, progressBar.getProgress());
-                        }
-                    }
-                };
-                t.start();
+
+
+                File audio = new File(Environment.DIRECTORY_DOWNLOADS, book.getTitle() + ".mp3").getAbsoluteFile();
+                if (!audio.exists()) {
+                    ((audioControl) getActivity()).playAudio(book.getId(), progressBar.getProgress());
+                } else {
+                    ((audioControl) getActivity()).playAudio(audio, progressBar.getProgress());
+                }
+
 
             }
         });
@@ -147,24 +165,38 @@ public class BookDetailsFragment extends Fragment {
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Thread t2 = new Thread() {
+                    @Override
+                    public void run() {
+                        File check = new File(getContext().getFilesDir(), book.getTitle() + ".mp3");
+                        Log.d("check path", check.getAbsolutePath());
+                        Log.d("check exist", String.valueOf(check.exists()));
+                        if (!check.exists()) {
+                            try {
 
-                File check = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), book.getTitle() + ".mp3");
+                                URL bookUrl = new URL(baseDownloadURL + book.getId());
 
-                Log.d("check", check.getAbsolutePath());
-                Log.d("exists", String.valueOf(check.exists()));
+                                URLConnection conn = bookUrl.openConnection();
+                                int contentLength = conn.getContentLength();
 
-                if (!check.exists()) {
+                                DataInputStream stream = new DataInputStream(bookUrl.openStream());
 
-                    DownloadManager downloadmanager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-                    Uri uri = Uri.parse(baseDownloadURL + book.getId());
-                    DownloadManager.Request request = new DownloadManager.Request(uri);
-                    request.setDescription("Downloading");
-                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalFilesDir(getContext(), Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), book.getTitle() + ".mp3");
-                    downloadmanager.enqueue(request);
-                } else {
-                    Toast.makeText(getContext(), "Already have", Toast.LENGTH_SHORT).show();
-                }
+                                byte[] buffer = new byte[contentLength];
+                                stream.readFully(buffer);
+                                stream.close();
+
+                                DataOutputStream fos = new DataOutputStream(new FileOutputStream(check));
+                                fos.write(buffer);
+                                fos.flush();
+                                fos.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                };
+                t2.start();
             }
         });
 
@@ -172,11 +204,12 @@ public class BookDetailsFragment extends Fragment {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File check = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), book.getTitle() + ".mp3");
-                Log.d("check", check.getAbsolutePath());
+                File check = new File(getContext().getFilesDir(), book.getTitle() + ".mp3");
                 if (check.exists()) {
                     check.delete();
                     Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Does not exist, cant delete", Toast.LENGTH_SHORT).show();
                 }
             }
         });
