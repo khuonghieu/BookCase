@@ -77,7 +77,6 @@ public class BookDetailsFragmentLandscape extends Fragment {
                 if (!audio.exists()) {
                     ((BookDetailsFragmentLandscape.audioControlLandscape) getActivity()).playAudioLandscape(book.getId(), seekBar.getProgress());
                     Log.d("playing", "from web");
-
                 } else {
                     ((BookDetailsFragmentLandscape.audioControlLandscape) getActivity()).playAudioLandscape(audio, seekBar.getProgress());
                     Log.d("playing", "from file");
